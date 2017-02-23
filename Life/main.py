@@ -12,9 +12,6 @@ COLS = 50
 ROWS = 50
 STEP_DELAY_SECONDS = 0.5
 
-GAME_STATE_RUNNING = 'running'
-GAME_STATE_PAUSED = 'paused'
-
 
 class Cell(Label):
     
