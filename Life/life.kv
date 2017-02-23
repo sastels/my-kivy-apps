@@ -1,0 +1,30 @@
+
+<Cell>:
+    canvas.before:
+        Color:
+            rgba: 1, 0, 0, self.alive
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<Game>:
+    game_board: game_board
+    density_input: density_input
+    orientation: 'vertical'
+    BoxLayout:
+        size_hint: None, None
+        size: 100, 100
+        Button:
+            size_hint: None, None
+            size: 100, 100
+            text: "Restart"
+            on_press: root.restart()
+        TextInput:
+            id: density_input
+            size_hint: None, None
+            size: 100, 100
+            text: '0.2'
+            multiline: False
+
+    GameBoard:
+        id: game_board
