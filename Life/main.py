@@ -12,6 +12,9 @@ COLS = 50
 ROWS = 50
 STEP_DELAY_SECONDS = 0.5
 
+GAME_STATE_RUNNING = 'running'
+GAME_STATE_PAUSED = 'paused'
+
 
 class Cell(Label):
     alive = NumericProperty(0)
@@ -29,6 +32,10 @@ class Cell(Label):
         else:
             if self.alive_nearby == 3:
                 self.alive = 1
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            self.alive = 1 - self.alive
 
 
 class GameBoard(GridLayout):
@@ -51,7 +58,7 @@ class GameBoard(GridLayout):
             target_cell.alive_nearby = 0
             for row, col in itertools.product(range(target_row - 1, target_row + 2),
                                               range(target_col - 1, target_col + 2)):
-                if row >= 0 and col >= 0 and row < self.rows and col < self.cols:
+                if 0 <= row and row < self.rows and 0 <= col and col < self.cols:
                     target_cell.alive_nearby += self.gameGrid[row][col].alive
             target_cell.alive_nearby -= target_cell.alive
 
@@ -63,18 +70,29 @@ class GameBoard(GridLayout):
 
 class Game(BoxLayout):
 
+    update_event = None
+
     def restart(self):
         self.game_board.restart()
 
     def update(self, _):
         self.game_board.update()
 
+    def toggle_pause(self):
+        if self.update_event:
+            self.update_event.cancel()
+            self.update_event = None
+            self.pause_button.text = "Continue"
+        else:
+            self.update_event = Clock.schedule_interval(self.update, STEP_DELAY_SECONDS)
+            self.pause_button.text = "Pause"
+
 
 class LifeApp(App):
     def build(self):
         game = Game()
-        Clock.schedule_interval(game.update, STEP_DELAY_SECONDS)
         game.restart()
+        game.toggle_pause()
         return game
 
 
