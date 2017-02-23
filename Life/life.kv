@@ -10,21 +10,38 @@
 <Game>:
     game_board: game_board
     density_input: density_input
+    pause_button: pause_button
     orientation: 'vertical'
+
     BoxLayout:
         size_hint: None, None
         size: 100, 100
         Button:
             size_hint: None, None
-            size: 100, 100
+            size: 200, 100
             text: "Restart"
             on_press: root.restart()
+        Button:
+            id: pause_button
+            size_hint: None, None
+            size: 200, 100
+            text: "Pause"
+            on_press: root.toggle_pause()
+        Label:
+            text: "Density:"
+            size_hint: None, None
+            size: 200, 100
         TextInput:
             id: density_input
             size_hint: None, None
-            size: 100, 100
+            size: 200, 100
             text: '0.2'
+            font_size: 50
             multiline: False
+        Label:
+            size_hint: None, None
+            size: 1000, 100
+            text: "Click to toggle a cell"
 
     GameBoard:
         id: game_board
