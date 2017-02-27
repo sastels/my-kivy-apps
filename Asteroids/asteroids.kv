@@ -12,16 +12,14 @@
 <Rock>:
     size_hint: None, None
     size: 100, 100
-    canvas:
+    font_size: 100
+    canvas.before:
+        PushMatrix
         Rotate:
             angle: self.angle
             origin: self.center
-        Rectangle:
-            pos: self.pos
-            size: self.size
-        Rotate:
-            angle: -self.angle
-            origin: self.center
+    canvas.after:
+        PopMatrix
 
 <Ship>:
     size_hint: None, None
@@ -46,6 +44,7 @@
         orientation: "vertical"
 
         GameScreen:
+            ship: ship
             id: game_screen
             Ship:
                 id: ship
@@ -74,4 +73,4 @@
                 id: score_label
                 size_hint_x: None
                 size_x: 100
-                text: "0"
+                text: str(int(self.parent.parent.parent.score))

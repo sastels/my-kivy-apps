@@ -9,24 +9,26 @@ import random
 from kivy.graphics.vertex_instructions import Triangle
 from kivy.vector import Vector
 from kivy.core.window import Window
-
+import string
 
 ROTATE_STEP = 10
 FRICTION_FACTOR = 0.95
 ROCK_INTERVAL = 0.5
+SCORE_TIME = 1.0
 
-class Rock(Widget):
+class Rock(Label):
 
     angle = NumericProperty(0)
     velocity = Vector(0, 0)
     rotation_velocity = 0
-
 
     def __init__(self, pos, velocity=(1, 1), **kwargs):
         super(Rock, self).__init__(**kwargs)
         self.velocity = Vector(velocity)
         self.rotation_velocity = ROTATE_STEP * random.random() / 2
         self.pos = pos
+        self.text = random.choice(string.letters)
+        self.color = (random.random(), random.random(), random.random(), 1)
 
     def move(self):
         self.pos = self.velocity + self.pos
@@ -87,8 +89,6 @@ class GameScreen(FloatLayout):
         self.rock = Rock(pos=(x, y), velocity=(velocity_x, velocity_y))
         self.add_widget(self.rock)
 
-        print 'rocks:', len(self.children) - 1
-
     def clean_up_rocks(self):
         for entity in self.children:
             if entity.x < self.x - 200 or entity.x > self.right + 200:
@@ -100,7 +100,17 @@ class GameScreen(FloatLayout):
         for entity in self.children:
             entity.move()
 
+    def ship_rock_collision(self):
+        for entity in self.children:
+            if entity != self.ship:
+                if entity.collide_widget(self.ship):
+                    return True
+        return False
+
+
 class Game(BoxLayout):
+
+    score = NumericProperty(0)
 
     def __init__(self):
         super(Game, self).__init__()
@@ -122,14 +132,21 @@ class Game(BoxLayout):
 
     def restart(self):
         self.rock_timer = 0.0
+        self.score = 0
 
     def update(self, dt):
         self.game_screen.move_objects()
         self.game_screen.clean_up_rocks()
+
+        if self.game_screen.ship_rock_collision():
+            self.restart()
+
         self.rock_timer += dt
         if self.rock_timer >= ROCK_INTERVAL:
             self.game_screen.add_rock()
             self.rock_timer = 0.0
+
+        self.score += dt
 
 class AsteroidsApp(App):
 
