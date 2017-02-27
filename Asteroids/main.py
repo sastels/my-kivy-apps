@@ -3,10 +3,9 @@ from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import NumericProperty, ObjectProperty, ReferenceListProperty
+from kivy.properties import NumericProperty
 from kivy.clock import Clock
 import random
-from kivy.graphics.vertex_instructions import Triangle
 from kivy.vector import Vector
 from kivy.core.window import Window
 import string
@@ -15,6 +14,7 @@ ROTATE_STEP = 10
 FRICTION_FACTOR = 0.95
 ROCK_INTERVAL = 0.5
 SCORE_TIME = 1.0
+
 
 class Rock(Label):
 
@@ -34,6 +34,7 @@ class Rock(Label):
         self.pos = self.velocity + self.pos
         self.angle += self.rotation_velocity
 
+
 class Ship(Widget):
     velocity = Vector(0, 0)
     angle = NumericProperty(0)
@@ -41,8 +42,6 @@ class Ship(Widget):
     def move(self):
         self.pos = self.velocity + self.pos
         self.velocity *= FRICTION_FACTOR
-#        if self.velocity.length() < 0.1:
-#            self.velocity = Vector(0, 0)
         if self.pos[0] < self.parent.x:
             self.pos[0] = self.parent.right
         if self.pos[0] > self.parent.right:
@@ -116,6 +115,7 @@ class Game(BoxLayout):
         super(Game, self).__init__()
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
+        self.rock_timer = 0.0
 
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
@@ -147,6 +147,7 @@ class Game(BoxLayout):
             self.rock_timer = 0.0
 
         self.score += dt
+
 
 class AsteroidsApp(App):
 

@@ -1,14 +1,6 @@
 #:import random random
 
 
-#<Widget>:
-#    canvas:
-#        Color:
-#            rgba: random.random(), random.random(), random.random(), 0.2
-#        Rectangle:
-#            pos: self.pos
-#            size: self.size
-
 <Rock>:
     size_hint: None, None
     size: 100, 100
@@ -33,7 +25,6 @@
         Rotate:
             angle: -self.angle
             origin: self.center
-
 
 <Game>:
     score_label: score_label
