@@ -1,0 +1,77 @@
+#:import random random
+
+
+#<Widget>:
+#    canvas:
+#        Color:
+#            rgba: random.random(), random.random(), random.random(), 0.2
+#        Rectangle:
+#            pos: self.pos
+#            size: self.size
+
+<Rock>:
+    size_hint: None, None
+    size: 100, 100
+    canvas:
+        Rotate:
+            angle: self.angle
+            origin: self.center
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Rotate:
+            angle: -self.angle
+            origin: self.center
+
+<Ship>:
+    size_hint: None, None
+    size: 50, 50
+    canvas:
+        Rotate:
+            angle: self.angle
+            origin: self.center
+        Triangle:
+            points: self.center_x - 20, self.center_y-20, self.center_x, self.center_y+20, self.center_x+20, self.center_y-20
+        Rotate:
+            angle: -self.angle
+            origin: self.center
+
+
+<Game>:
+    score_label: score_label
+    ship: ship
+    game_screen: game_screen
+
+    BoxLayout:
+        orientation: "vertical"
+
+        GameScreen:
+            id: game_screen
+            Ship:
+                id: ship
+                center: self.parent.center
+
+        BoxLayout:
+            size_hint_y: None
+            size_y: 100
+            orientation: "horizontal"
+            Button:
+                size_hint_x: None
+                size_x: 100
+                text: "<-"
+                on_touch_down: ship.rotate_left()
+            Button:
+                size_hint_x: None
+                size_x: 100
+                text: "->"
+                on_touch_down: ship.rotate_right()
+            Button:
+                size_hint_x: None
+                size_x: 100
+                text: "##"
+                on_touch_down: ship.fire_engine()
+            Label:
+                id: score_label
+                size_hint_x: None
+                size_x: 100
+                text: "0"
